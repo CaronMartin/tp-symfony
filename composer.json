@@ -4,10 +4,11 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "sensio/framework-extra-bundle": "^6.1",
+        "symfony/asset": "5.2.*",
         "symfony/console": "5.2.*",
         "symfony/debug-bundle": "5.2.*",
         "symfony/dotenv": "5.2.*",
@@ -62,5 +63,8 @@
             "allow-contrib": false,
             "require": "5.2.*"
         }
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.30"
     }
 }
