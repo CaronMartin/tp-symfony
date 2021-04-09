@@ -2,115 +2,167 @@
 
 namespace App\Entity;
 
-use DateTime;
+use App\Repository\ArticleTwigRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity(repositoryClass=ArticleTwigRepository::class)
+ */
 class ArticleTwig
 {
-    private string $title;
-    private string $subtitle;
-    private DateTime $createdAt;
-    private string $author;
-    private string $body;
-    private string $image;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
     /**
-     * @return string
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    public function getTitle(): string
+    private $title;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $subtitle;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $author;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $body;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article")
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle(string $title): void
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSubtitle(): string
+    public function getSubtitle(): ?string
     {
         return $this->subtitle;
     }
 
-    /**
-     * @param string $subtitle
-     */
-    public function setSubtitle(string $subtitle): void
+    public function setSubtitle(?string $subtitle): self
     {
         $this->subtitle = $subtitle;
+
+        return $this;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    /**
-     * @param DateTime $createdAt
-     */
-    public function setCreatedAt(DateTime $createdAt): void
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAuthor(): string
+    public function getAuthor(): ?string
     {
         return $this->author;
     }
 
-    /**
-     * @param string $author
-     */
-    public function setAuthor(string $author): void
+    public function setAuthor(string $author): self
     {
         $this->author = $author;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBody(): string
+    public function getBody(): ?string
     {
         return $this->body;
     }
 
-    /**
-     * @param string $body
-     */
-    public function setBody(string $body): void
+    public function setBody(?string $body): self
     {
         $this->body = $body;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    /**
-     * @param string $image
-     */
-    public function setImage(string $image): void
+    public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
     }
 
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
 
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setArticle($this);
+        }
 
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getArticle() === $this) {
+                $comment->setArticle(null);
+            }
+        }
+
+        return $this;
+    }
 }
-
-?>
